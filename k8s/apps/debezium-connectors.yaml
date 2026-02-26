@@ -1,0 +1,17 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: mongodb-connector
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+spec:
+  class: io.debezium.connector.mongodb.MongoDbConnector
+  tasksMax: 1
+  config:
+    # التنسيق الذي يطلبه الخطأ حرفياً
+    mongodb.connection.string: "mongodb://mongodb.default.svc.cluster.local:27017/?replicaSet=rs0"
+    # تغيير اسم الحقل من topic.prefix إلى topic.namespace (مطلوب في النسخ الحديثة)
+    topic.prefix: "mongo"
+    collection.include.list: "commerce.events"
+    capture.mode: "change_streams_update_full"
